@@ -3,11 +3,11 @@ from unittest.mock import AsyncMock, MagicMock
 import pytest
 
 from app.bot.handlers.onboarding import (
+    OnboardingStates,
     cancel_onboarding,
     receive_employee_name,
     start_onboarding,
 )
-from app.bot.handlers.onboarding import OnboardingStates
 
 
 @pytest.fixture
