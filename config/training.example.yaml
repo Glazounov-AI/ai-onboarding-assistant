@@ -1,0 +1,14 @@
+profile_id: demo-onboarding
+version: 1
+
+title: "Введение в работу команды"
+language: ru
+
+learning:
+  material_file: "materials/demo.md"
+  allow_questions: true
+
+quiz:
+  question_count: 5
+  passing_score_percent: 80
+  allow_retry: true
