@@ -12,3 +12,7 @@ quiz:
   question_count: 5
   passing_score_percent: 80
   allow_retry: true
+
+tutor:
+  system_prompt_file: prompts/tutor_system.txt
+  temperature: 0.2

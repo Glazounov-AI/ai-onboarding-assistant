@@ -1,3 +1,5 @@
+import logging
+
 from aiogram import F, Router
 from aiogram.filters import Command, CommandStart
 from aiogram.fsm.context import FSMContext
@@ -5,9 +7,11 @@ from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import Message
 
 from app.core.session import normalize_employee_name
+from app.services.tutor import TutorError, TutorService
 
 router = Router()
 
+logger = logging.getLogger(__name__)
 
 class OnboardingStates(StatesGroup):
     waiting_for_name = State()
@@ -62,17 +66,47 @@ async def receive_invalid_name(message: Message) -> None:
     await message.answer("Пожалуйста, отправьте имя текстовым сообщением.")
 
 
+@router.message(OnboardingStates.learning, F.text)
+async def answer_learning_question(
+    message: Message,
+    tutor: TutorService,
+) -> None:
+    question = message.text or ""
+
+    try:
+        answer = await tutor.answer(question)
+    except ValueError as exc:
+        await message.answer(str(exc))
+        return
+    except TutorError:
+        logger.exception("AI tutor request failed")
+        await message.answer(
+            "Сейчас не удалось получить ответ AI-наставника.\n"
+            "Попробуйте повторить вопрос позже."
+        )
+        return
+
+    await message.answer(answer)
+
+
 @router.message(OnboardingStates.learning)
-async def learning_placeholder(message: Message) -> None:
+async def learning_non_text(message: Message) -> None:
     await message.answer(
-        "Сессия обучения активна.\n"
-        "Учебный модуль будет подключён на следующем этапе.\n\n"
-        "Для перезапуска отправьте /start."
+        "Пожалуйста, отправьте вопрос текстовым сообщением."
     )
 
 
 @router.message()
-async def fallback(message: Message) -> None:
+async def fallback(message: Message, state: FSMContext) -> None:
+    current_state = await state.get_state()
+
+    logger.warning(
+        "Fallback triggered: user_id=%s, state=%s, text=%r",
+        message.from_user.id if message.from_user else None,
+        current_state,
+        message.text,
+    )
+
     await message.answer(
         "Чтобы начать обучение, отправьте /start."
     )
