@@ -28,3 +28,5 @@ logs/
 Thumbs.db
 
 .test_tmp/
+# Generated quiz drafts
+/quizzes/drafts/

@@ -15,6 +15,7 @@ class LearningConfig(BaseModel):
 class QuizConfig(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
+    bank_file: str = Field(default="quizzes/demo.json", min_length=1)
     question_count: int = Field(ge=1, le=50)
     passing_score_percent: int = Field(ge=0, le=100)
     allow_retry: bool = True

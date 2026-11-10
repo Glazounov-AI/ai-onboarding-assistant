@@ -9,6 +9,7 @@ learning:
   allow_questions: true
 
 quiz:
+  bank_file: "quizzes/demo.json"
   question_count: 5
   passing_score_percent: 80
   allow_retry: true
