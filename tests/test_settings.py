@@ -6,6 +6,7 @@ def test_default_settings(monkeypatch):
         "BOT_TOKEN",
         "POSTGRES_PASSWORD",
         "POSTGRES_HOST",
+        "POSTGRES_PORT",
         "OPENAI_API_KEY",
     ):
         monkeypatch.delenv(key, raising=False)

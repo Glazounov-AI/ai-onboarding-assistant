@@ -13,4 +13,7 @@ COPY config ./config
 COPY materials ./materials
 COPY prompts/ ./prompts/
 
+COPY alembic.ini ./alembic.ini
+COPY migrations ./migrations
+
 CMD ["python", "-m", "app"]
